@@ -1,0 +1,386 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+*::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.jsOverallDiv {
+    width: 100%;
+    height: 100vh;
+    background-color: #f7f6f2;
+    padding: 20px;
+}
+
+.calendar {
+    display: grid;
+    grid-template-columns: 150px repeat(9, 1fr);
+    gap: 2px;
+}
+
+.header div {
+    padding: 5px 10px;
+    font-size: 16px;
+    font-weight: bold;
+    border: 1px solid #e7e5e1;
+    border-radius: 5px;
+    text-align: left;
+}
+
+.category-row {
+    grid-column: span 10;
+    background: #f0f0f0;
+    padding: 8px 16px;
+    font-weight: bold;
+    font-size: 15px;
+    border: 1px solid #e7e5e1;
+    border-radius: 5px;
+}
+
+.row {
+    display: contents;
+}
+
+.room {
+    border: 1px solid #e7e5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    height: 50px;
+}
+
+.slot {
+    border: 1px solid #f0ede8;
+    position: relative;
+    background-image: repeating-linear-gradient(135deg, #e7e5e1 0px, #e7e5e1 0.5px, #f7f6f2 0.5px, #f7f6f2 3px);
+}
+
+.booking {
+   position: absolute;
+    top: 2px;
+    height: 44px;
+    padding: 6px;
+    background: white;
+    border-left: 4px solid #85a4fd;
+    border-radius: 3px;
+    font-size: 13px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: grid;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1;
+    grid-template-columns: calc(100% - 16px) 6px;
+    cursor: pointer;
+}
+
+.booking .name {
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.booking .time {
+    font-size: 11px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+.timeline {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #85a4fd;
+    z-index: 100;
+}
+
+.grid-container {
+    position: relative;
+    top: 2px;
+    height: calc(100% - 37px);
+    overflow: scroll;
+}
+
+.jsPopup {
+    display:none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+    z-index: 1000;
+    min-width: 200px;
+}
+.svg-wrapper{
+     position: relative;
+  cursor: pointer;
+}
+.svg-wrapper:hover .jsPopup {
+    display: block;
+}
+
+.jsCurrentTime {
+    background: #8da3fb;
+    width: 50px;
+    text-align: center;
+    border-radius: 7px;
+    position: absolute;
+    top: -28px;
+    left: -21px;
+}
+
+/* Slot choosen */
+/* Room row container */
+.room-row {
+    display: flex;
+    border: 1px solid #ccc;
+    height: 60px;
+    position: relative;
+    margin-bottom: 5px;
+    background-color: #fff;
+    border-radius: 6px;
+    /* overflow: hidden; */
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    /* overflow: hidden;
+    overflow-x: auto;
+    overflow-y: visible; */
+
+}
+
+/* Room name label (left side) */
+.room-label {
+    width: 150px;
+    background: #f5f5f5;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid #ddd;
+    padding: 0 10px;
+}
+
+/* Time cell container (right side of row) */
+.time-blocks {
+    flex: 1;
+    display: flex;
+    position: relative;
+    cursor: crosshair;
+}
+
+/* Each time cell (visual hour block) */
+.time-cell {
+    flex: 1;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+    background-color: #fafafa;
+    position: relative;
+}
+
+/* Selection highlight overlay */
+.selection {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background-color: rgba(0, 123, 255, 0.3);
+    border: 1px dashed #007bff;
+    pointer-events: none;
+    z-index: 10;
+    border-radius: 4px;
+}
+
+/* FormStyle */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 999;
+}
+
+.modal-container {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    width: 700px;
+    z-index: 1000;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.modal-header h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f1f1f;
+    margin: 0;
+}
+
+.close-btn {
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.input-group .jsTime {
+    border: none;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    padding: 10px 12px;
+    font-size: 14px;
+    /* width: 130px; */
+    display: flex;
+    align-items: center;
+    color: #bfbfbf;
+    gap: 8px;
+}
+
+.input-group input {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #bfbfbf;
+    /* width: calc(100% - 18px); */
+    height: 15px;
+}
+
+.input-group .arrow {
+    font-size: 18px;
+    color: #999;
+}
+
+.room-info {
+    background: #f4f4f4;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.room-info .title {
+    font-weight: 600;
+    font-size: 14px;
+    color: #1f1f1f;
+    margin-bottom: 4px;
+}
+
+.room-info .desc {
+    font-size: 13px;
+    color: #777;
+}
+
+.dropdown select {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    /* margin-bottom: 24px; */
+}
+
+.modal-footer {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-footer button {
+    padding: 10px 24px;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    /* border: none; */
+}
+
+.btn-book {
+    background-color: #303667;
+    color: #fff;
+}
+
+.btn-edit {
+    background-color: #fff;
+    border: 1px solid #303667;
+    color: #333;
+}
+
+.jspurpose {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.jspurpose input {
+    border: none;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 10px 12px;
+    font-size: 14px;
+    width: 100%;
+    border: 1px solid #ccc;
+    /* margin-bottom: 15px; */
+}
+
+.jsicon {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
